@@ -9,3 +9,7 @@ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.o
 
 python -m pip install -U matplotlib
 ```
+
+```shell
+Image Plotting: store image_loading.py inside covid 100 folder to view CT Scans
+```
