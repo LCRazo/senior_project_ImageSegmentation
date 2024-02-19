@@ -22,6 +22,10 @@ train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=Tru
 # Initialize the U-Net model
 model = UNet()  # Instantiate your U-Net model
 
+# ***code from template to use as reference***
+# model = unet(n_channels=3, n_classes=1, embedded_module=args.embedded_module, gcn=args.gcn, np_ratio=args.np_ratio, k_ratio=args.k_ratio, os=args.os)
+# print('using unet......')
+
 # Define loss function and optimizer
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
