@@ -7,55 +7,60 @@ from your_dataset_module import YourDatasetClass
 from unet_model import UNet  # Import your U-Net model implementation
 import argparse
 
-# Define hyperparameters
-parser = argparse.ArgumentParser(description='U-Net Training')
-parser.add_argument('--batch_size', type=int, default=32, help='Batch size for training')
-parser.add_argument('--learning_rate', type=float, default=0.001, help='Learning rate for optimizer')
-parser.add_argument('--num_epochs', type=int, default=10, help='Number of epochs for training')
-args = parser.parse_args()
+def main():
+    # Define hyperparameters
+    parser = argparse.ArgumentParser(description='U-Net Training')
+    parser.add_argument('--batch_size', type=int, default=32, help='Batch size for training')
+    parser.add_argument('--learning_rate', type=float, default=0.001, help='Learning rate for optimizer')
+    parser.add_argument('--num_epochs', type=int, default=10, help='Number of epochs for training')
+    args = parser.parse_args()
 
-# Initialize the dataset and data loader
-print('======> Loading train datasets on:', args.train_list)
-train_dataset = YourDatasetClass(train=True, transform=ToTensor())  # Modify this according to your dataset implementation
-train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
+    # Initialize the dataset and data loader
+    print('======> Loading train datasets on:', args.train_list)
+    train_dataset = YourDatasetClass(train=True, transform=ToTensor())  # Modify this according to your dataset implementation
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
 
-# Initialize the U-Net model
-model = UNet()  # Instantiate your U-Net model
+    # Initialize the U-Net model
+    model = UNet()  # Instantiate your U-Net model
 
-# ***code from template to use as reference***
-# model = unet(n_channels=3, n_classes=1, embedded_module=args.embedded_module, gcn=args.gcn, np_ratio=args.np_ratio, k_ratio=args.k_ratio, os=args.os)
-# print('using unet......')
+    # ***code from template to use as reference***
+    # model = unet(n_channels=3, n_classes=1, embedded_module=args.embedded_module, gcn=args.gcn, np_ratio=args.np_ratio, k_ratio=args.k_ratio, os=args.os)
+    # print('using unet......')
 
-# Define loss function and optimizer
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
+    # Define loss function and optimizer
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
 
-# Set device to GPU if available
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model.to(device)
+    # Set device to GPU if available
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.to(device)
 
-# Training loop
-for epoch in range(args.num_epochs):
-    running_loss = 0.0
-    for images, masks in train_loader:
-        # Move images and masks to the appropriate device
-        images = images.to(device)
-        masks = masks.to(device)
+    # Training loop
+    for epoch in range(args.num_epochs):
+        running_loss = 0.0
+        for images, masks in train_loader:
+            # Move images and masks to the appropriate device
+            images = images.to(device)
+            masks = masks.to(device)
 
-        # Forward pass
-        outputs = model(images)
+            # Forward pass
+            outputs = model(images)
 
-        # Calculate loss
-        loss = criterion(outputs, masks)
+            # Calculate loss
+            loss = criterion(outputs, masks)
 
-        # Backward pass and optimization
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+            # Backward pass and optimization
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-        running_loss += loss.item()
+            running_loss += loss.item()
 
-    # Print average loss for the epoch
-    print(f'Epoch [{epoch + 1}/{args.num_epochs}], Loss: {running_loss / len(train_loader):.4f}')
+        # Print average loss for the epoch
+        print(f'Epoch [{epoch + 1}/{args.num_epochs}], Loss: {running_loss / len(train_loader):.4f}')
 
-print('Finished Training')
+    print('Finished Training')
+
+
+if __name__ == '__main__':
+    main()
