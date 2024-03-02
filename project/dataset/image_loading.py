@@ -14,6 +14,12 @@ for file_path in file_paths:
         # Display the shape of the loaded data
         print(f"Shape of the loaded data ({file_path}):", test_load.shape)
 
+        # Calculate the min and max intensity values (Housnsefield units)
+        min_intensity = np.min(test_load)
+        max_intensity = np.max(test_load)
+
+        print(f"Min intensity (HU): {min_intensity }")
+
         # Additional code to visualize or process the data if needed
         test = test_load[:, :, 59]
         plt.imshow(test)
