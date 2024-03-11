@@ -8,6 +8,8 @@ pip install nibabel
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 python -m pip install -U matplotlib
+
+pip install scipy
 ```
 
 ```shell
