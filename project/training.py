@@ -1,13 +1,16 @@
 import torch
 from dataset.dataset import TrainMosDataset
+from dataset import transforms as joint_transforms
 import torch.nn as nn                      
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision.transforms import ToTensor
 from unet.unet_model import UNet as unet  # Import your U-Net model implementation
+import numpy as np
 import argparse
 
-#similarity measure to evaluate segmentation performance. measures overlap between two masks
+
+# Similarity measure to evaluate segmentation performance. measures overlap between two masks
 def dice_coefficient(predicted, target, smooth=1e-6):
     intersection = torch.sum(predicted * target)
     union = torch.sum(predicted * target)
@@ -46,6 +49,16 @@ def main():
 
     args = parser.parse_args()
 
+    # Transforms configuration
+    train_transforms = joint_transforms.Compose([
+        joint_transforms.Scale(args.scales),
+        joint_transforms.Pad(args.crop_size),
+        joint_transforms.RandomCrop(args.crop_size),
+        joint_transforms.RandomRotion(15),
+        joint_transforms.RandomIntensityChange((0.1, 0.1)),
+        joint_transforms.RandomFlip(),
+        joint_transforms.NumpyType((np.float32, np.uint8)),
+    ])
 
     # Loading Datatset
     print('======> Loading train datasets on:', args.train_list)
@@ -53,9 +66,10 @@ def main():
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
 
     # Initialize the U-Net model
-    #3 gray scale, and 3 regions of interest (background, lung, covid region)
-    model = unet(in_channels=3, out_channels=3, )
+    # Using individual gray scale dataset & number of classes as parameters
+    model = unet(in_channels=1, out_channels=3)
     print('using unet......')
+
     # # ***code from template to use as reference***
     # model = unet(n_channels=3, n_classes=1, embedded_module=args.embedded_module, gcn=args.gcn, np_ratio=args.np_ratio, k_ratio=args.k_ratio, os=args.os)
     # print('using unet......')
