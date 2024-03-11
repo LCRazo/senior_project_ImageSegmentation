@@ -70,10 +70,6 @@ def main():
     model = unet(in_channels=1, out_channels=3)
     print('using unet......')
 
-    # # ***code from template to use as reference***
-    # model = unet(n_channels=3, n_classes=1, embedded_module=args.embedded_module, gcn=args.gcn, np_ratio=args.np_ratio, k_ratio=args.k_ratio, os=args.os)
-    # print('using unet......')
-
     # Define loss function and optimizer (We need Dice Loss)
     # criterion = nn.CrossEntropyLoss()
     criterion = DiceLoss()
