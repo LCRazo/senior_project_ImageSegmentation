@@ -13,7 +13,7 @@ import argparse
 # Similarity measure to evaluate segmentation performance. measures overlap between two masks
 def dice_coefficient(predicted, target, smooth=1e-6):
     intersection = torch.sum(predicted * target)
-    union = torch.sum(predicted * target)
+    union = torch.sum(predicted) + torch.sum(target)
     dice = (2. * intersection + smooth) / (union + smooth)
     return dice
 
@@ -34,6 +34,9 @@ def main():
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for training')
     parser.add_argument('--learning_rate', type=float, default=0.001, help='Learning rate for optimizer')
     parser.add_argument('--num_epochs', type=int, default=10, help='Number of epochs for training')
+    parser.add_argument('--scales', type=int, default=128, help='Scale factor for augmentation')
+    parser.add_argument('--crop_size', type=int, default=256, help='Size for random cropping')
+
     # parser.add_argument('--gcn', type=str, default='hogcn')
     # parser.add_argument('--np_ratio', type=float, default=0.005)
     # parser.add_argument('--k_ratio', type=float, default=0.5)
